@@ -30,7 +30,9 @@ file(GLOB_RECURSE LOWLEVEL_CLOTH_SOURCES ${PROJECT_SOURCE_DIR}/src/PhysX_3.4/Sou
 
 # Remove AVX sources 
 # TODO: Check for AVX support
-# list(REMOVE_ITEM LOWLEVEL_CLOTH_SOURCES "${PROJECT_SOURCE_DIR}/src/PhysX_3.4/Source/LowLevelCloth/src/avx/SwSolveConstraints.cpp")
+if(NOT WIN32)
+    list(REMOVE_ITEM LOWLEVEL_CLOTH_SOURCES "${PROJECT_SOURCE_DIR}/src/PhysX_3.4/Source/LowLevelCloth/src/avx/SwSolveConstraints.cpp")
+endif()
 # Remove NEON sources 
 # TODO: Check for NEON support
 list(REMOVE_ITEM LOWLEVEL_CLOTH_HEADERS "${PROJECT_SOURCE_DIR}/src/PhysX_3.4/Source/LowLevelCloth/src/neon/SwCollisionHelpers.h")
