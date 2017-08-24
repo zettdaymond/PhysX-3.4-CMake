@@ -10,7 +10,9 @@ if(APPLE)
 
     # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
 elseif(WIN32)
-
+    # TODO: Set PX_PHYSX_CORE_EXPORTS flag and enable delay loads.
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zc:wchar_t /D \"_HAS_EXCEPTIONS=0\" /D \"WIN32\" /D \"WIN64\" /D \"_CRT_SECURE_NO_DEPRECATE\" /D \"_CRT_NONSTDC_NO_DEPRECATE\" /D \"_WINSOCK_DEPRECATED_NO_WARNINGS\" /D \"PHYSX_PROFILE_SDK\" /D \"RENDER_SNIPPET\" /D \"PX_NVTX=1\" /D \"PX_SUPPORT_PVD=1\" /GF /Zc:forScope /GR- /Gd /MT /MP /Wall /wd4514 /wd4820 /wd4127 /wd4710 /wd4711 /wd4435 /wd4577 /wd4464 /d2Zi+ /Zc:inline /fp:fast")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zc:wchar_t /D \"_HAS_EXCEPTIONS=0\" /D \"WIN32\" /D \"WIN64\" /D \"_CRT_SECURE_NO_DEPRECATE\" /D \"_CRT_NONSTDC_NO_DEPRECATE\" /D \"_WINSOCK_DEPRECATED_NO_WARNINGS\" /D \"PHYSX_PROFILE_SDK\" /D \"RENDER_SNIPPET\" /D \"_DEBUG\" /D \"PX_DEBUG=1\" /D \"PX_CHECKED=1\" /D \"PX_NVTX=1\" /D \"PX_SUPPORT_PVD=1\" /GF /Zc:forScope /RTCu /GR- /Gd /MTd /Zc:inline /fp:fast /MP /Wall /wd4514 /wd4820 /wd4127 /wd4710 /wd4711 /wd4435 /wd4577 /wd4464 /d2Zi+")
 elseif(EMSCRIPTEN)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DPHYSX_PROFILE_SDK -DNDEBUG -DPX_SUPPORT_PVD=0 -pipe -msse2 -ffast-math -fno-exceptions -fno-rtti -fvisibility=hidden -fvisibility-inlines-hidden -Wno-return-type-c-linkage -Wall -Wextra -fstrict-aliasing -Wstrict-aliasing=2 -pedantic -Weverything -Wno-documentation-deprecated-sync -Wno-documentation-unknown-command -Wno-float-equal -Wno-padded -Wno-weak-vtables -Wno-cast-align -Wno-conversion -Wno-missing-variable-declarations -Wno-shift-sign-overflow -Wno-global-constructors -Wno-exit-time-destructors -Wno-missing-prototypes -O3 -fno-strict-aliasing")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DPHYSX_PROFILE_SDK -D_DEBUG -DPX_DEBUG=1 -DPX_CHECKED=1 -DPX_SUPPORT_PVD=1 -pipe -msse2 -ffast-math -fno-exceptions -fno-rtti -fvisibility=hidden -fvisibility-inlines-hidden -Wno-return-type-c-linkage -Wall -Wextra -fstrict-aliasing -Wstrict-aliasing=2 -pedantic -Weverything -Wno-documentation-deprecated-sync -Wno-documentation-unknown-command -Wno-float-equal -Wno-padded -Wno-weak-vtables -Wno-cast-align -Wno-conversion -Wno-missing-variable-declarations -Wno-shift-sign-overflow -Wno-global-constructors -Wno-exit-time-destructors -Wno-missing-prototypes -g3 -O0")
@@ -37,8 +39,6 @@ source_group("Sources" FILES ${SNIPPET_HELLO_WORLD_SOURCES})
 
 if(APPLE)
     add_executable(SnippetHelloWorld MACOSX_BUNDLE ${SNIPPET_HELLO_WORLD_HEADERS} ${SNIPPET_HELLO_WORLD_SOURCES})
-elseif(WIN32)
-    add_executable(SnippetHelloWorld WIN32 ${SNIPPET_HELLO_WORLD_HEADERS} ${SNIPPET_HELLO_WORLD_SOURCES})
 else()
     add_executable(SnippetHelloWorld ${SNIPPET_HELLO_WORLD_HEADERS} ${SNIPPET_HELLO_WORLD_SOURCES})
 endif()
@@ -49,6 +49,10 @@ target_include_directories(SnippetHelloWorld PUBLIC "${PROJECT_SOURCE_DIR}/src/P
 target_include_directories(SnippetHelloWorld PUBLIC "${PROJECT_SOURCE_DIR}/src/PxShared/include")
 target_include_directories(SnippetHelloWorld PUBLIC "${PROJECT_SOURCE_DIR}/src/PxShared/src/foundation/include")
 target_include_directories(SnippetHelloWorld PUBLIC "${PROJECT_SOURCE_DIR}/src/PxShared/src/fastxml/include")
+
+if(WIN32)
+    target_include_directories(SnippetHelloWorld PUBLIC "${PROJECT_SOURCE_DIR}/src/PhysX_3.4/Snippets/Graphics/include/win32/GL")
+endif()
 
 # -----------------------------------------------------------------------------------------------------------------------------
 # LINKING
@@ -77,6 +81,10 @@ if(WIN32 OR UNIX OR APPLE)
     # Link Snippet libs
     target_link_libraries(SnippetHelloWorld SnippetUtils)
     target_link_libraries(SnippetHelloWorld SnippetRender)
+endif()
+
+if(WIN32)
+    target_link_libraries(SnippetHelloWorld "${PROJECT_SOURCE_DIR}/src/PhysX_3.4/Snippets/Graphics/lib/win64/glut/glut32.lib")
 endif()
 
 # Link OS libs
