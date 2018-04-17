@@ -4,6 +4,7 @@ CMake scripts for building Nvidia PhysX 3.4
 ## Status 
 
 ### Platforms 
+* Windows
 * macOS 10.12 with Xcode.
 * Emscripten (with some issues).
 
