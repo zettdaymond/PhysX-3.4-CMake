@@ -15,15 +15,16 @@ set (PHYSX_COMMON_DEFINITIONS -DDISABLE_CUDA_PHYSX=1 -DPX_PHYSX_STATIC_LIB=1 -DP
 add_compile_options(
     ${PHYSX_COMMON_DEFINITIONS}
     $<$<CONFIG:Debug>:-DPX_SUPPORT_PVD=0>
-    $<$<CONFIG:Debug>:-DNDEBUG>
+    $<$<CONFIG:Debug>:-D_DEBUG=1>
     $<$<NOT:$<CONFIG:Debug>>:-DPX_SUPPORT_PVD=1>
     $<$<NOT:$<CONFIG:Debug>>:-DPX_DEBUG=1>
     $<$<NOT:$<CONFIG:Debug>>:-DPX_CHECKED=1>
+    $<$<NOT:$<CONFIG:Debug>>:-DNDEBUG=1>
 )
 
 if(WIN32)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_WINSOCK_DEPRECATED_NO_WARNINGS)
-    add_compile_options(/Zc:wchar_t /GF /GR- /Zc:forScope /Wall /wd4514 /wd4820 /wd4127 /wd4710 /wd4711 /wd4435 /wd4577 /wd4464 /d2Zi+)
+    add_compile_options(/Zc:wchar_t /GF /GR- /Zc:forScope /Wall /wd4514 /wd4820 /wd4127 /wd4710 /wd4711 /wd4435 /wd4577 /wd4464 /wd5045 /d2Zi+)
 else()
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_compile_options(-Wno-return-type-c-linkage -Wno-documentation-deprecated-sync
