@@ -33,7 +33,7 @@
 
 projects/
 build/
-src/
+# src/
 bin/
 lib/
 cmake-*
